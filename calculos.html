@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Ingredientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .ingredient {
+            margin-left: 20px;
+        }
+        .total-price {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+    <script>
+        // Objeto que contiene los precios de los ingredientes
+        const precios = {
+            "huevo": 5,
+            "pollo": 8,
+            "queso": 6,
+            "jamón": 7,
+            "aceitunas": 4
+        };
+
+        function actualizarIngredientes() {
+            const tipoComida = document.getElementById("tipoComida").value;
+            const ingredientesDiv = document.getElementById("ingredientes");
+            ingredientesDiv.innerHTML = "";
+
+            // Ingredientes por tipo de comida
+            const ingredientes = {
+                "canapés": ["huevo", "pollo", "queso"],
+                "sándwiches": ["jamón", "queso", "aceitunas"]
+            };
+
+            if (ingredientes[tipoComida]) {
+                ingredientes[tipoComida].forEach(ing => {
+                    ingredientesDiv.innerHTML += `
+                        <div class="ingredient">
+                            <label>
+                                <input type="checkbox" value="${ing}" onchange="calcularPrecio()">
+                                ${ing.charAt(0).toUpperCase() + ing.slice(1)} ($${precios[ing]})
+                            </label>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function calcularPrecio() {
+            const checkboxes = document.querySelectorAll("#ingredientes input[type='checkbox']");
+            let total = 0;
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    total += precios[cb.value];
+                }
+            });
+
+            document.getElementById("precioTotal").textContent = `Total: $${total}`;
+        }
+    </script>
+</head>
+<body>
+    <h1>Selecciona tus ingredientes</h1>
+
+    <label for="tipoComida">Tipo de comida:</label>
+    <select id="tipoComida" onchange="actualizarIngredientes()">
+        <option value="" disabled selected>Selecciona una opción</option>
+        <option value="canapés">Canapés</option>
+        <option value="sándwiches">Sándwiches</option>
+    </select>
+
+    <div id="ingredientes">
+        <!-- Aquí se cargarán los ingredientes según el tipo de comida -->
+    </div>
+
+    <div id="precioTotal" class="total-price">
+        Total: $0
+    </div>
+</body>
+</html>
